@@ -1,23 +1,49 @@
 
 package proyectoii.analisisalgoritmos;
 
+import java.util.Arrays;
+
 public class ProgramacionDinamica{
     //Referencia: 
     //https://jcsis.wordpress.com/2013/12/22/programacion-dinamica-algoritmo-cambio-monedas/
     
-    private int [] combinacionPresentaciones;
-    private int [] presentaciones;
-    private int kilos;
+    private int [] combinacionPresentaciones=null;
+    private int [] presentaciones=null;
+    private int kilos =0;
+    private int asig=0;
+    private int comp=0;
+    private static long startTime;
+    private static long endTime;
+    //FALTA MEMORIA
     
-    ProgramacionDinamica (int kilosArroz, int[]  presentaciones){
+    
+    ProgramacionDinamica (int kilosArroz, int[] presentaciones){
+        Arrays.sort(presentaciones);
         this.presentaciones = presentaciones;
         this.kilos=kilosArroz;
-        //Crear matriz y la rellena.
+        //Crear matriz y la rellena con las combinaciones que desperdicien menos cantidad de arroz.
         int [][] matriz = minDesperdicio(kilosArroz, presentaciones);
         //Una vez completa la matriz, se lee el resultado de la matriz.
         this.combinacionPresentaciones = leerMatriz(kilosArroz, presentaciones, matriz);
     }
+    public int[] getCombinacionPresentaciones() {return combinacionPresentaciones;}
+    public void setCombinacionPresentaciones(int[] combinacionPresentaciones) {this.combinacionPresentaciones = combinacionPresentaciones;}
+    public int[] getPresentaciones() {return presentaciones;}
+    public void setPresentaciones(int[] presentaciones) {this.presentaciones = presentaciones;}
+    public int getKilos() {return kilos;}
+    public void setKilos(int kilos) {this.kilos = kilos;}
+    public int getAsig(){return asig;}
+    public void setAsig(int asig) {this.asig = asig;}
+    public int getComp(){return comp;}
+    public void setComp(int comp) {this.comp = comp;}
+    public static long getStartTime(){return startTime;}
+    public static void setStartTime(long startTime){ProgramacionDinamica.startTime = startTime;}
+    public static long getEndTime(){return endTime;}
+    public static void setEndTime(long endTime){ProgramacionDinamica.endTime = endTime;}
+    //FALTA SETTERS Y GETTERS DE MEMORIA.
+    
     /**
+     * ESTO EN REALIDAD SE HACE EN EL MAIN LLAMANDO A LOS GETTERS.
      *  Muestra la combinacion de presentaciones y sus cantidades 
      * para obtener la menor cantidad de desperdicio de arroz cuandos se 
      * quiere obtener n cantidad de kilos.
@@ -25,16 +51,11 @@ public class ProgramacionDinamica{
      */
     public void getCombinacion(){
         System.out.println("Kilos arroz necesarios: "+kilos);
-        System.out.println("La combinacion que desperdicia menor cantidad de arroz es: ");
-        int desperdicio=0;
+        System.out.println("La combinacion obtenida: ");
         int totalKilos =0;
         for (int i=0;i<presentaciones.length;i++){
-            System.out.println("\t Presentacion de "+presentaciones[i]+" :"+combinacionPresentaciones[i]);
+            System.out.println("\t Presentacion de "+presentaciones[i]+": "+combinacionPresentaciones[i]+" unidades.");
             totalKilos+=  combinacionPresentaciones[i]*presentaciones[i];
-//            if (combinacionPresentaciones[i]!=0){//Si es 0 es porque no se usa esa presentacion.
-//                
-//                desperdicio+= (kilos- (combinacionPresentaciones[i]*presentaciones[i]));
-//            }
         }
         //Desperdicio es: kilos - suma de todos los kilos por presentacion.
         System.out.println("Total kilos: "+totalKilos);
@@ -88,6 +109,7 @@ public class ProgramacionDinamica{
                     que puedo comprar una presentacion de 2 sin tener desperdicio y 
                     si le agrego una de 3, obtengo 5 kilos.
                     */
+                    //antes era esta formula pero no funcionaba bien.
                     //Math.abs((columna - (int )Math.ceil(columna/presentaciones[fila-1])*presentaciones[fila-1]))
                     minimoDesperdicio = min(matriz[fila - 1][columna] , Math.abs(matriz[fila][columna-1-fila]));//-1 porque empieza en 1
                     matriz[fila][columna] = minimoDesperdicio;
@@ -159,54 +181,66 @@ public class ProgramacionDinamica{
         //imprimirMatriz(matrizResultado,presentaciones);
         return combinacion;
     }
+    /**
+     * Metodo que imprime matriz de resultados.
+     * @param matriz: Matriz con resultado de combinaciones.
+     * @param array: Arreglo con las presentaciones.
+     */
     static void imprimirMatriz(int [][]matriz,int array[]){
-//        int fila=0;
-//        int columna=0;
-//        while (fila < matriz.length){
-//            while (columna<matriz[fila].length){
-//                System.out.println("Fila: "+fila+" - Columna: "+columna+" = "+matriz[fila][columna]);
-//                columna++;
-//            }
-//            System.out.println("");
-//            fila++;
-//            columna=0;
-//        }
-        for (int x=0; x < matriz.length; x++) {
-          System.out.print("|");
-          for (int y=0; y < matriz[x].length; y++) {
-            System.out.print (matriz[x][y]);
-            if (y!=matriz[x].length-1) System.out.print("\t");
-          }
-          System.out.println("|");
+        for (int[] matriz1 : matriz) {
+            System.out.print("|");
+            for (int y = 0; y < matriz1.length; y++) {
+                System.out.print(matriz1[y]);
+                if (y != matriz1.length - 1) {
+                    System.out.print("\t");
+                }
+            }
+            System.out.println("|");
         }
     }
     public static void main(String[] args) {
+        /*
+            LAS PRESENTACIONES PUEDEN SER QUEMADAS. Pero preferiblemente usar presentaciones que no sean multiplos entre si.
+            Entre mas pequenas sean las presentaciones mas aproximado sera.
+            Cuando n es multiplo de alguna preentacion no hay desperdicio.
+        */
+        ProgramacionDinamica c = new ProgramacionDinamica(5, new int[]{3,7,2});
+        c.getCombinacion();
+        
+        ProgramacionDinamica i= new ProgramacionDinamica(8, new int[]{2,3,5});
+        i.getCombinacion();
+        
         ProgramacionDinamica a = new ProgramacionDinamica(10, new int[]{2,3,7});
         a.getCombinacion();
 
         ProgramacionDinamica b = new ProgramacionDinamica(11, new int[]{2,3,7});
         b.getCombinacion();
-
-        ProgramacionDinamica c = new ProgramacionDinamica(5, new int[]{2,3,7});
-        c.getCombinacion();
         
-        ProgramacionDinamica d = new ProgramacionDinamica(102, new int[]{2,3,7,10});
-        d.getCombinacion();
+        ProgramacionDinamica j= new ProgramacionDinamica(13, new int[]{2,3,5});
+        j.getCombinacion();
         
         ProgramacionDinamica e = new ProgramacionDinamica(55, new int[]{2,3,7,5,10});
         e.getCombinacion();
         
+        //Este deberia ser 5*13 + 3*2 = 71
         ProgramacionDinamica f= new ProgramacionDinamica(71, new int[]{3,5,11});
         f.getCombinacion();
         
+        //Si esta bien. Porque es lo mas aproximado.
         ProgramacionDinamica g= new ProgramacionDinamica(71, new int[]{11,13,100});
         g.getCombinacion();
-        //Este deberia ser 5*20 =100 + 13*1 = 113
+        
+        ProgramacionDinamica d = new ProgramacionDinamica(102, new int[]{2,3,7,10});
+        d.getCombinacion();
+        
+        //Este deberia ser 5*20 =100 + 13*1 = 113.
+        //No toma en cuenta presentaciones mayores que 5 porque las combinaciones previas 
+        //tienen menor cantidad de desperdicio.
         ProgramacionDinamica h= new ProgramacionDinamica(113, new int[]{5,11,13});
         h.getCombinacion();
         
-        ProgramacionDinamica i= new ProgramacionDinamica(8, new int[]{2,3,5});
-        i.getCombinacion();
-        //IMPORTANTE ORDENAR LAS PRESENTACIONES ANTES DE TODO.
+        System.out.println("prueba: "+Integer.SIZE/8);
+        
+        
     }
 }
