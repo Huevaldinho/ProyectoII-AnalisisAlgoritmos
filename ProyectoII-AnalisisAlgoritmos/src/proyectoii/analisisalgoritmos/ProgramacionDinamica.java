@@ -93,25 +93,16 @@ public class ProgramacionDinamica{
         for (int fila = 1; fila <= presentaciones.length; fila++)//For para filas (presentaciones)
             //Empieza con la segunda columna porque la del 0 ya se completo anteriormente.
             for (int columna = 1; columna <= kilos; columna++) {//For para columnas (kilos)
-                //Si la presentacion es mayor que los kilos que se ocupan(columna),
-                //se toma el valor de la celda de arriba.
-                if (presentaciones[fila - 1] > columna){//Se resta 1 a la fila porque el array no tiene el cero.
-                    matriz[fila][columna] = matriz[fila - 1][columna];//Toma el valor de la celda de arriba.
+                //Si es mayor toma el menor entre la fila de arriba o el desperdicio de presentaciones-kilo
+                if (presentaciones[fila - 1] > columna){
+                    matriz[fila][columna] = min(matriz[fila-1][columna],Math.abs(columna-presentaciones[fila-1]));
                 }
                 else{
-                    /*
-                        Si el valor de la presentacion es menor o igual al kilo
-                        Saca la combinacion que desperdicie menos la combinacion
-                    de la celda de arriba o sea, con presentaciones mas pequenas o
-                    con la combinacion que se genera de restar kilo - presentacion.
-                    Porque n se puede construir con muchas presentaciones.
-                    Ejemplo. si se tiene 5 puedo hacer 5-3 que es 2, entonces yo se
-                    que puedo comprar una presentacion de 2 sin tener desperdicio y 
-                    si le agrego una de 3, obtengo 5 kilos.
-                    */
-                    //antes era esta formula pero no funcionaba bien.
-                    //Math.abs((columna - (int )Math.ceil(columna/presentaciones[fila-1])*presentaciones[fila-1]))
-                    minimoDesperdicio = min(matriz[fila - 1][columna] , Math.abs(matriz[fila][columna-1-fila]));//-1 porque empieza en 1
+                    //Compara si la el desperdicio de la fila de arriba es menor que
+                    //el desperdicio al restar la kilos-presentacion. Esto es como decir
+                    //si tengo 5 kilos y le resto 3, aun me faltan 2 kilos por comprar,
+                    //y como tengo presentacion de 2 kilos el desperdicio es 0.
+                    minimoDesperdicio = min(matriz[fila - 1][columna] ,matriz[fila][Math.abs(columna-presentaciones[fila-1])]);
                     matriz[fila][columna] = minimoDesperdicio;
                 }
             }
@@ -202,8 +193,11 @@ public class ProgramacionDinamica{
         /*
             LAS PRESENTACIONES PUEDEN SER QUEMADAS. Pero preferiblemente usar presentaciones que no sean multiplos entre si.
             Entre mas pequenas sean las presentaciones mas aproximado sera.
-            Cuando n es multiplo de alguna preentacion no hay desperdicio.
-        */
+            Cuando n es multiplo de alguna preentacion no hay desperdicio, eso
+        implica que cuando hay presentacion de 1 no hay desperdicio.
+          */  
+        
+        //Buenos
         ProgramacionDinamica c = new ProgramacionDinamica(5, new int[]{3,7,2});
         c.getCombinacion();
         
@@ -212,35 +206,30 @@ public class ProgramacionDinamica{
         
         ProgramacionDinamica a = new ProgramacionDinamica(10, new int[]{2,3,7});
         a.getCombinacion();
-
+        
+        ProgramacionDinamica e = new ProgramacionDinamica(55, new int[]{2,3,7,5,10});
+        e.getCombinacion();
+        
+        ProgramacionDinamica f= new ProgramacionDinamica(71, new int[]{3,5,11});
+        f.getCombinacion();
+        
+        ProgramacionDinamica d = new ProgramacionDinamica(102, new int[]{2,3,7,10});
+        d.getCombinacion();
+        
         ProgramacionDinamica b = new ProgramacionDinamica(11, new int[]{2,3,7});
         b.getCombinacion();
         
         ProgramacionDinamica j= new ProgramacionDinamica(13, new int[]{2,3,5});
         j.getCombinacion();
         
-        ProgramacionDinamica e = new ProgramacionDinamica(55, new int[]{2,3,7,5,10});
-        e.getCombinacion();
-        
-        //Este deberia ser 5*13 + 3*2 = 71
-        ProgramacionDinamica f= new ProgramacionDinamica(71, new int[]{3,5,11});
-        f.getCombinacion();
-        
-        //Si esta bien. Porque es lo mas aproximado.
-        ProgramacionDinamica g= new ProgramacionDinamica(71, new int[]{11,13,100});
-        g.getCombinacion();
-        
-        ProgramacionDinamica d = new ProgramacionDinamica(102, new int[]{2,3,7,10});
-        d.getCombinacion();
-        
-        //Este deberia ser 5*20 =100 + 13*1 = 113.
-        //No toma en cuenta presentaciones mayores que 5 porque las combinaciones previas 
-        //tienen menor cantidad de desperdicio.
         ProgramacionDinamica h= new ProgramacionDinamica(113, new int[]{5,11,13});
         h.getCombinacion();
         
-        System.out.println("prueba: "+Integer.SIZE/8);
-        
+      
+ 
+
+//        System.out.println("prueba: "+Integer.SIZE/8);
+//        
         
     }
 }
