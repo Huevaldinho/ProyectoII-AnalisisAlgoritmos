@@ -17,15 +17,6 @@ public class ProgramacionDinamica{
     //FALTA MEMORIA
     
     
-    ProgramacionDinamica (int kilosArroz, int[] presentaciones){
-        Arrays.sort(presentaciones);
-        this.presentaciones = presentaciones;
-        this.kilos=kilosArroz;
-        //Crear matriz y la rellena con las combinaciones que desperdicien menos cantidad de arroz.
-        int [][] matriz = minDesperdicio(kilosArroz, presentaciones);
-        //Una vez completa la matriz, se lee el resultado de la matriz.
-        this.combinacionPresentaciones = leerMatriz(kilosArroz, presentaciones, matriz);
-    }
     public int[] getCombinacionPresentaciones() {return combinacionPresentaciones;}
     public void setCombinacionPresentaciones(int[] combinacionPresentaciones) {this.combinacionPresentaciones = combinacionPresentaciones;}
     public int[] getPresentaciones() {return presentaciones;}
@@ -42,6 +33,18 @@ public class ProgramacionDinamica{
     public static void setEndTime(long endTime){ProgramacionDinamica.endTime = endTime;}
     //FALTA SETTERS Y GETTERS DE MEMORIA.
     
+    ProgramacionDinamica (int kilosArroz, int[] presentaciones){
+        this.asig+=2;//parametros
+        Arrays.sort(presentaciones);
+        this.presentaciones = presentaciones;
+        this.kilos=kilosArroz;
+        this.asig+=2;
+        //Crear matriz y la rellena con las combinaciones que desperdicien menos cantidad de arroz.
+        int [][] matriz = minDesperdicio(kilosArroz, presentaciones);
+        //Una vez completa la matriz, se lee el resultado de la matriz.
+        this.combinacionPresentaciones = leerMatriz(kilosArroz, presentaciones, matriz);
+        this.asig+=2;
+    }
     /**
      * ESTO EN REALIDAD SE HACE EN EL MAIN LLAMANDO A LOS GETTERS.
      *  Muestra la combinacion de presentaciones y sus cantidades 
@@ -68,34 +71,56 @@ public class ProgramacionDinamica{
      * @return int [][]: Matriz con combinaciones de presentaciones.
      */
     private int[][] minDesperdicio(int kilos, int[]  presentaciones){
+        this.asig+=2;//parametros
         /*
             Matriz de tamanno Presentaciones+1 filas y kilos+1 columnas.
             Cada fila de la matriz representa una presentacion. Tiene una fila mas para el cero.
             Cada columna son los kilos que hay entre 0 y la cantidad de kilos que se necesitan.
         */
         int[][] matriz = new int[presentaciones.length + 1][kilos + 1];
+        this.asig+=1;
         
         //Columna del 0 siempre es 0 porque no se necesita ninguna
         //presentacion para obtener 0 kilos.
-        for (int fila = 0; fila < presentaciones.length; fila++)
+        this.asig+=1;//fila = 0 del for
+        for (int fila = 0; fila < presentaciones.length; fila++){
             matriz[fila][0] = 0;
+            this.asig+=2;//incremento del for y matriz[fila][0]= 0    
+            this.comp+=1;//true del for
+            
+        }
+        this.comp+=1;//false del for
+            
             
         //Completa la primera fila a partir de la segunda columna
         //con un numero grande porque no se puede obtener n kilos con presentacion
         //de 0 kilos.
-        for (int columna = 1; columna <= kilos; columna++)
+        this.asig+=1;//columna =1
+        for (int columna = 1; columna <= kilos; columna++){
             matriz[0][columna] = 100;//Integer.MAX_VALUE;
+            this.asig+=2;//incremento del for y matriz[0][columna]=100
+            this.comp+=1;//true del for
+        }
+        this.comp+=1;//false del for
+            
         
         //Variable para escoger cual combinacion que desperdicia menos kilos.
         int minimoDesperdicio;
         
         //Empieza en la segunda fila porque la primera es la del 0 y ya se completo anteriormente.
-        for (int fila = 1; fila <= presentaciones.length; fila++)//For para filas (presentaciones)
+        this.asig+=1;//fila = 1 del for
+        for (int fila = 1; fila <= presentaciones.length; fila++){//For para filas (presentaciones)
+            this.asig+=1;//incremento del for de fila
+            this.comp+=1;//true del for de fila
             //Empieza con la segunda columna porque la del 0 ya se completo anteriormente.
-            for (int columna = 1; columna <= kilos; columna++) {//For para columnas (kilos)
+            this.asig+=1;//columna = 1 for columna
+            for (int columna = 1; columna <= kilos; columna++){//For para columnas (kilos)
+                this.asig+=1;//incremento del for columna
+                this.comp+=1;//true del for columna
                 //Si es mayor toma el menor entre la fila de arriba o el desperdicio de presentaciones-kilo
                 if (presentaciones[fila - 1] > columna){
                     matriz[fila][columna] = min(matriz[fila-1][columna],Math.abs(columna-presentaciones[fila-1]));
+                    this.asig+=1;//matriz[fila][columna]=
                 }
                 else{
                     //Compara si la el desperdicio de la fila de arriba es menor que
@@ -104,8 +129,13 @@ public class ProgramacionDinamica{
                     //y como tengo presentacion de 2 kilos el desperdicio es 0.
                     minimoDesperdicio = min(matriz[fila - 1][columna] ,matriz[fila][Math.abs(columna-presentaciones[fila-1])]);
                     matriz[fila][columna] = minimoDesperdicio;
+                    this.asig+=2;//dos asignaciones mindesperdicio y matriz.
                 }
+                this.comp+=1;//comparacion del if
             }
+            this.comp+=1;//false for columna
+        }
+        this.comp+=1;//false for fila
          return matriz;
         }
     /**
@@ -115,6 +145,8 @@ public class ProgramacionDinamica{
      * @return 
      */
     private int min(int celdaArriba, int filaActual){
+        this.asig+=2;//parametros
+        this.comp+=1;//comparacion del if
         if(celdaArriba<filaActual)
             return celdaArriba;
         else 

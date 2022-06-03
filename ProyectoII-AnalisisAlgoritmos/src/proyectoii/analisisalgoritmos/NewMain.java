@@ -23,7 +23,7 @@ public class NewMain {
     public static void main(String[] args) {
             int presentaciones[] = {2,4,7};
             int kilos = 19;
-            //AlgoritmoGenetico p = new AlgoritmoGenetico(presentaciones,kilos);
+            AlgoritmoGenetico p = new AlgoritmoGenetico(presentaciones,kilos);
             int[][] temp;
             temp = new int [2][3];
             temp[0][0] = 4;
