@@ -12,8 +12,9 @@ public class ProgramacionDinamica{
     private int kilos =0;
     private int asig=0;
     private int comp=0;
-    private static long startTime;
-    private static long endTime;
+    private static long startTime;//en nano
+    private static long endTime;//en nano
+    private static int memoria;//un int consume 4 bytes (32 bits).
     //FALTA MEMORIA
     
     
@@ -34,35 +35,45 @@ public class ProgramacionDinamica{
     //FALTA SETTERS Y GETTERS DE MEMORIA.
     
     ProgramacionDinamica (int kilosArroz, int[] presentaciones){
+        startTime=0;
+        startTime = System.nanoTime();
+        
+        this.memoria+=3*4;//kilos, asig y comp se declaran en la clase.
         this.asig+=2;//parametros
         Arrays.sort(presentaciones);
         this.presentaciones = presentaciones;
+        this.memoria+=this.presentaciones.length*4;//largo del arreglo * 4 bytes.
         this.kilos=kilosArroz;
         this.asig+=2;
         //Crear matriz y la rellena con las combinaciones que desperdicien menos cantidad de arroz.
         int [][] matriz = minDesperdicio(kilosArroz, presentaciones);
+        this.memoria+=matriz.length*matriz[0].length*4;//cada celda es un int.
         //Una vez completa la matriz, se lee el resultado de la matriz.
         this.combinacionPresentaciones = leerMatriz(kilosArroz, presentaciones, matriz);
+        this.memoria+=this.combinacionPresentaciones.length*4;
         this.asig+=2;
+        endTime = System.nanoTime() - startTime; 
     }
     /**
-     * ESTO EN REALIDAD SE HACE EN EL MAIN LLAMANDO A LOS GETTERS.
-     *  Muestra la combinacion de presentaciones y sus cantidades 
-     * para obtener la menor cantidad de desperdicio de arroz cuandos se 
-     * quiere obtener n cantidad de kilos.
+     *  Muestra el resultado del algoritmo.
      * 
      */
     public void getCombinacion(){
         System.out.println("Kilos arroz necesarios: "+kilos);
         System.out.println("La combinacion obtenida: ");
         int totalKilos =0;
+        this.memoria+=4;//totalkilos
         for (int i=0;i<presentaciones.length;i++){
             System.out.println("\t Presentacion de "+presentaciones[i]+": "+combinacionPresentaciones[i]+" unidades.");
             totalKilos+=  combinacionPresentaciones[i]*presentaciones[i];
         }
         //Desperdicio es: kilos - suma de todos los kilos por presentacion.
         System.out.println("Total kilos: "+totalKilos);
-        System.out.println("Desperdicio: "+Math.abs(kilos-totalKilos)+'\n');
+        System.out.println("Desperdicio: "+Math.abs(kilos-totalKilos));
+        System.out.println("Asignaciones: "+this.asig);
+        System.out.println("Comparaciones: "+this.comp);
+        System.out.println("Memoria: "+this.memoria+" bytes.");
+        System.out.println("Tiempo: "+this.endTime+" nanosegundos."+'\n');
     }
     /**
      *  Metodo para calcular la combinacion que desperdicia menos arroz. Programacion Dinamica
@@ -79,10 +90,12 @@ public class ProgramacionDinamica{
         */
         int[][] matriz = new int[presentaciones.length + 1][kilos + 1];
         this.asig+=1;
+        this.memoria+=matriz.length*matriz[0].length*4;
         
         //Columna del 0 siempre es 0 porque no se necesita ninguna
         //presentacion para obtener 0 kilos.
         this.asig+=1;//fila = 0 del for
+        this.memoria+=4;//fila
         for (int fila = 0; fila < presentaciones.length; fila++){
             matriz[fila][0] = 0;
             this.asig+=2;//incremento del for y matriz[fila][0]= 0    
@@ -96,6 +109,7 @@ public class ProgramacionDinamica{
         //con un numero grande porque no se puede obtener n kilos con presentacion
         //de 0 kilos.
         this.asig+=1;//columna =1
+        this.memoria+=4;//columna
         for (int columna = 1; columna <= kilos; columna++){
             matriz[0][columna] = 100;//Integer.MAX_VALUE;
             this.asig+=2;//incremento del for y matriz[0][columna]=100
@@ -106,14 +120,17 @@ public class ProgramacionDinamica{
         
         //Variable para escoger cual combinacion que desperdicia menos kilos.
         int minimoDesperdicio;
+        this.memoria+=4;//
         
         //Empieza en la segunda fila porque la primera es la del 0 y ya se completo anteriormente.
         this.asig+=1;//fila = 1 del for
+        this.memoria+=4;//fila
         for (int fila = 1; fila <= presentaciones.length; fila++){//For para filas (presentaciones)
             this.asig+=1;//incremento del for de fila
             this.comp+=1;//true del for de fila
             //Empieza con la segunda columna porque la del 0 ya se completo anteriormente.
             this.asig+=1;//columna = 1 for columna
+            this.memoria+=4;//columna
             for (int columna = 1; columna <= kilos; columna++){//For para columnas (kilos)
                 this.asig+=1;//incremento del for columna
                 this.comp+=1;//true del for columna
@@ -165,6 +182,7 @@ public class ProgramacionDinamica{
         //porque cada indice de la presentacion tendra la cantidad de 
         //preesentaciones que necesita de ese tipo.
         int[] combinacion = new int[presentaciones.length];
+        this.memoria+=combinacion.length*4;//comb * 4
         
         //Pone 0 por defecto en todas las presentaciones.
         for(int i = 0; i< presentaciones.length; i++){             
@@ -173,6 +191,7 @@ public class ProgramacionDinamica{
         
         int fila = presentaciones.length;
         int columna = kilosArroz;         
+        this.memoria+=8;
         
         /*
             Para leer la matriz, se empieza desde la ultima celda hasta la primera celda.
