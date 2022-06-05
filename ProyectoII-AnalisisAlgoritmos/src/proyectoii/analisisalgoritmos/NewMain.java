@@ -46,6 +46,20 @@ public class NewMain {
             }
             System.out.print("]");
 
+            //Algoritmo Programacion Dinamica - USAR MISMOS KILOS QUE USA EL ALGORITMO GENETICO
+            //Tamanos 3
+            kilos=13;//debe usar el la misma cantidad de kilos que el genetico.
+            ProgramacionDinamica pd3 = new ProgramacionDinamica(kilos, new int[]{3,7,2});
+            pd3.getCombinacion();
+            //Tamano 6
+            kilos=25;
+            ProgramacionDinamica pd6 = new ProgramacionDinamica(kilos, new int[]{7,9,10,11,13,15});
+            pd6.getCombinacion();
+            //Tamano 9
+            kilos=47;
+            ProgramacionDinamica pd9 = new ProgramacionDinamica(kilos, new int[]{30,41,11,13,15,17,19,23,29});
+            pd9.getCombinacion();
+            
             
             
            

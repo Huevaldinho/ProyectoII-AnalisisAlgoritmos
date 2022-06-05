@@ -111,7 +111,7 @@ public class ProgramacionDinamica{
         this.asig+=1;//columna =1
         this.memoria+=4;//columna
         for (int columna = 1; columna <= kilos; columna++){
-            matriz[0][columna] = 100;//Integer.MAX_VALUE;
+            matriz[0][columna] = Integer.MAX_VALUE;//Integer.MAX_VALUE;
             this.asig+=2;//incremento del for y matriz[0][columna]=100
             this.comp+=1;//true del for
         }
@@ -277,10 +277,17 @@ public class ProgramacionDinamica{
         h.getCombinacion();
         
       
- 
+        ProgramacionDinamica pd6 = new ProgramacionDinamica(25, new int[]{7,9,10,11,13,15});
+        pd6.getCombinacion();
+        
+         int kilos=13;
+        ProgramacionDinamica pd3 = new ProgramacionDinamica(kilos, new int[]{3,7,2});
+        pd3.getCombinacion();
 
 //        System.out.println("prueba: "+Integer.SIZE/8);
-//        
+        kilos=47;
+        ProgramacionDinamica pd9 = new ProgramacionDinamica(kilos, new int[]{30,41,11,13,15,17,19,23,29});
+        pd9.getCombinacion();
         
     }
 }
