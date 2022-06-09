@@ -297,6 +297,8 @@ public class AlgoritmoGenetico {
               //revisar si alguno tiene fitness 0 y terminar todo. 
               if(hijo1[0] == 0 || hijo2[0] == 0){
                 bandera = true;
+                System.out.println("PRESENTACIONES:");
+                imprimirIndividuo(presentaciones);
                 System.out.println("----Se encontró un individuo con DESPERDICIO 0----");
                 if(hijo1[0] == 0){
                     imprimirIndividuo(hijo1);
@@ -392,6 +394,8 @@ public class AlgoritmoGenetico {
               //revisar si alguno tiene fitness 0 y terminar todo. 
               if(hijo1[0] == 0 || hijo2[0] == 0){
                 bandera = true;
+                System.out.println("PRESENTACIONES:");
+                imprimirIndividuo(presentaciones);
                 System.out.println("----Se encontró un individuo con DESPERDICIO 0----");
                 if(hijo1[0] == 0){
                     imprimirIndividuo(hijo1);
