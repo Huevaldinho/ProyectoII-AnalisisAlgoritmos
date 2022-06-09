@@ -9,7 +9,7 @@ import java.util.Arrays;
 
 /**
  *
- * @author Harrick Mc Lean M
+ * @author Sophya Mc Lean M
  */
 public class NewMain {
 
@@ -19,48 +19,34 @@ public class NewMain {
         private int[][] poblacionInicial = null;
         private static int cantFilas = 3;
         private static int cantPresentaciones = 2;
-
-    public static void main(String[] args) {
-            int presentaciones[] = {2,4,7};
-            int kilos = 19;
-            //AlgoritmoGenetico p = new AlgoritmoGenetico(presentaciones,kilos);
-            int[][] temp;
-            temp = new int [2][3];
-            temp[0][0] = 4;
-            temp[0][1] = 3;
-            temp[0][2] = 10;
-            temp[1][0] = 2;
-            temp[1][1] = 4;
-            temp[1][2] = 5;
-            
-           Arrays.sort(temp);
-           
-           System.out.println("POBLACION INICIAL DESPUÉS:");
-            System.out.print("[");
-            for(int i=0; i<2; i++){
-                System.out.print("[");
-                for(int j=0; j<3; j++){
-                    System.out.print(temp[i][j]+",");
+        private static int presentaciones[] = {2,4,7};
+       
+        public static void prueba(){
+            int cantF = 10;
+            for(int e: presentaciones){
+                for(int i=0;i<cantF;cantFilas++){
+                    if(cantFilas == 3){
+                        System.out.println("SALIENDO DEL PRIMER CICLO");
+                        return;
+                    }
                 }
-                System.out.print("]");
+                if(cantFilas == 3){
+                    System.out.println("SALIENDO DEL 2DO CICLO");
+                    
+                }
             }
-            System.out.print("]");
-
-            
-            
-           
-//            System.out.println("PRUEBA CON 3: Debería dar 4 filas, 3 columnas");
-//            p.poblacionInicial(presentaciones);
-//            System.out.println("PRUEBA CON 5: Debería dar 6 filas, 5 columnas");
-//            int presentaciones2[] = {2,4,7,8,9};
-//            p.poblacionInicial(presentaciones2);
-//            System.out.println("PRUEBA CON 6: Debería dar 11 filas, 6 columnas");
-//            int presentaciones3[] = {2,4,7,8,9,7};
-//            p.poblacionInicial(presentaciones3);
-//            System.out.println("PRUEBA CON 9: Debería dar 21 filas, 9 columnas");
-//            int presentaciones4[] = {1,2,3,4,5,6,7,8,9};
-//            p.poblacionInicial(presentaciones4);
-        // TODO code application logic here
+            if(cantFilas == 3){
+                System.out.println("SALIENDO DE FUNCION");
+                
+            }
+            System.out.println("SIGUE HACIENDO ESTO?");
+        }
+        
+        
+    public static void main(String[] args) {
+            int kilos = 19;
+            AlgoritmoGenetico p = new AlgoritmoGenetico(presentaciones,kilos);
+            p.generaciones();
     }
     
 }
