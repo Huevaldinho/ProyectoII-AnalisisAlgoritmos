@@ -12,87 +12,37 @@ package proyectoii.analisisalgoritmos;
 public class AlgoritmoGenetico {
 
 
-    private int [] presentaciones = null;
+    private int [] presentaciones;
     private boolean bandera = false;
-    private int cantFilas = 0;
-    private int cantGeneraciones = 0;
-    private int cantHijos = 0;
-    private int cantPresentaciones = 0;
-    private int kilosSolicitados = 0;
+    private int cantFilas;
+    private int cantGeneraciones;
+    private int cantHijos;
+    private int cantPresentaciones;
+    private int kilosSolicitados;
     private int filasComp;
-    private static int[][] poblacionInicial = null;
-    private int[][] hijosOneP = null; //Guarda los hijos que generen estos cruces
-    private int[][] hijosTwoP = null; //Guarda los hijos que generen estos cruces
-    private int[][] poblacionOneP = null; //Copia de la poblacion inicial para el cruce1
-    private int[][] poblacionTwoP = null; //Copia de la poblacion inicial para el cruce2
-    private int asig = 0;
-    private int comp = 0;
+    private static int[][] poblacionInicial;
+    private int[][] hijosOneP; //Guarda los hijos que generen estos cruces
+    private int[][] hijosTwoP; //Guarda los hijos que generen estos cruces
+    private int[][] poblacionOneP; //Copia de la poblacion inicial para el cruce1
+    private int[][] poblacionTwoP; //Copia de la poblacion inicial para el cruce2
+    private int comp;
+    private int cantInstrucciones; //Definir desde inicio
     private static long startTime;
     private static long endTime;
-    private static int memoriaConsumida; //¿Contar en bytes o bits?
+    //variables entero = 40bytes, long 16bytes, boolean 1 bit,
+    private static int memoriaConsumida = 56; //BYTES
+    private int asig;
     
     public AlgoritmoGenetico(int []present, int kilos) {
         this.kilosSolicitados = kilos;
         this.presentaciones = present; 
         this.cantPresentaciones = present.length;
+        asig+=3;
     }
     public AlgoritmoGenetico() {
     }
 
-    public int[] getPresentaciones() {
-        return presentaciones;
-    }
-    public void setPresentaciones(int[] presentaciones) {
-        this.presentaciones = presentaciones;
-    }
-    public int getKilosSolicitados() {
-        return kilosSolicitados;
-    }
-    public void setKilosSolicitados(int kilosSolicitados) {
-        this.kilosSolicitados = kilosSolicitados;
-    }
-    public int getAsig() {
-        return asig;
-    }
-    public void setAsig(int asig) {
-        this.asig = asig;
-    }
-    public int getComp() {
-        return comp;
-    }
-    public void setComp(int comp) {
-        this.comp = comp;
-    }
-    public static long getStartTime() {
-        return startTime;
-    }
-    public static void setStartTime(long startTime) {
-        AlgoritmoGenetico.startTime = startTime;
-    }
-    public static long getEndTime() {
-        return endTime;
-    }
-    public static void setEndTime(long endTime) {
-        AlgoritmoGenetico.endTime = endTime;
-    }
-    public static int getMemoriaConsumida() {
-        return memoriaConsumida;
-    }
-    public static void setMemoriaConsumida(int memoriaConsumida) {
-        AlgoritmoGenetico.memoriaConsumida = memoriaConsumida;
-    }
-
-    public int getCantPresentaciones() {
-        return cantPresentaciones;
-    }
-
-    public void setCantPresentaciones(int cantPresentaciones) {
-        this.cantPresentaciones = cantPresentaciones;
-    }
-    
-    
-
-//-	Los individuos deben ser distintos.
+    //Los individuos deben ser distintos.
     //Ciclo para generar la cantidad que se usará de cada presentación
     //int[] presentaciones PAAMETRO
     public int[][] poblacionInicial(){
@@ -112,21 +62,22 @@ public class AlgoritmoGenetico {
             default: 
                 cantFilas = cantPresentaciones + 1;
                 cantGeneraciones = 10;
-                if(cantPresentaciones == 3){ 
-                   cantHijos = 6; 
-                }
-                else{ //En caso de que sea 5
-                    cantHijos = 10;
-                }
+                //en el caso de 3 son 6, en el caso de 5 son 10
+                cantHijos = cantPresentaciones * 2;
                 break;
         }
+        asig+=3; 
+        comp+= 3; //switch
         //Se inicializan las mtrices que guardarán la información de los cruces
         hijosOneP = new int[cantHijos][cantPresentaciones+1];
         hijosTwoP = new int[cantHijos][cantPresentaciones+1];
         //Se inicializa la matriz que guarda la población inicial 
         poblacionInicial = new int [cantFilas][cantPresentaciones+1];  //Matriz que guarda la población incial      
+        asig+=3;
         int elemento; 
         int faltante;
+        memoriaConsumida += (cantHijos*(cantPresentaciones+1) * 4) * 2 + 
+                cantFilas*
         System.out.println("Cantidad presentaciones: " + cantPresentaciones);
         System.out.println("Cantidad de generaciones: " + cantGeneraciones);
         System.out.println("Cantidad de hijos: " + cantHijos);
@@ -155,7 +106,7 @@ public class AlgoritmoGenetico {
             //Revisar que elemento NO estén en la matriz de poblacionInicial
 
             if(i!=0){ //Si no es la fila de presentaciones. 
-                faltante = funcionFitness(presentaciones,poblacionInicial[i]);
+                faltante = funcionFitness(poblacionInicial[i]);
                 //Comparación para asegurar que el individuo no tenga desperdicio cero
                 // ni tenga menos kilos de los solicitados. 
                 if(faltante<=0){ //Faltante negativo->menos kilos de los solicitados
@@ -167,7 +118,7 @@ public class AlgoritmoGenetico {
                    
                    poblacionInicial[i][1] = Math.abs(faltante);
                    System.out.println("Cambio en el elemento "+ i + ","+1+":"+poblacionInicial[i][1]);
-                   faltante = funcionFitness(presentaciones,poblacionInicial[i]);
+                   faltante = funcionFitness(poblacionInicial[i]);
                    
                    System.out.println("\n Kilos del individuo " + i + " = " + kilosIndividuo);
                 } 
@@ -186,7 +137,7 @@ public class AlgoritmoGenetico {
     //FUNCIÓN APTITUD O FITNESS
     //Esta función obtiene cuánto le falta a la población para alcanzar los
     // kilos que me pide el usuario. 
-    public int funcionFitness(int[] presentaciones, int[] individuo){
+    public int funcionFitness(int[] individuo){
         int kilosIndividuo = 0;
         for(int i=0; i<cantPresentaciones; i++){
            kilosIndividuo += individuo[i+1]* presentaciones[i];
@@ -200,20 +151,25 @@ public class AlgoritmoGenetico {
         int tope; //para el primer ciclo
         int tope2; //para el segundo ciclo
         int inicio;
-        if(flag == 2){ //Ordenar arreglo de 10 MEJORES
-            inicio = 0;
-            tope = filasComp;//**********
-            tope2 = filasComp;//**********
-        }
-        if(flag == 1){ //Ordenar arreglo de hijos 
-            inicio = 0;
-            tope=cantHijos;
-            tope2 = cantHijos;
-        }
-        else{ //Ordenar poblacion inicial 
-            inicio = 1;
-            tope = cantFilas-1;
-            tope2=cantFilas;
+        switch (flag) {
+            case 2:
+                //Ordenar arreglo de 10 MEJORES
+                inicio = 0;
+                tope= filasComp;//**********
+                tope2 = filasComp;//**********
+                break;
+            case 1:
+                //Ordenar arreglo de hijos
+                inicio = 0;
+                tope=cantHijos;
+                tope2 = cantHijos;
+                break;
+            default:
+                //Ordenar poblacion inicial
+                inicio = 1;
+                tope = cantFilas-1;
+                tope2=cantFilas;
+                break;
         }
         
         int[] temp; //arreglo temporal para saber por cual individuo(fila) va.
@@ -278,8 +234,8 @@ public class AlgoritmoGenetico {
               //
               //agregar los hijos generados a la MATRIZ DE HIJOS;
               //Se asigna el fitness de los individuos
-              hijo1[0] = funcionFitness(presentaciones, hijo1);
-              hijo2[0] = funcionFitness(presentaciones, hijo2);
+              hijo1[0] = funcionFitness(hijo1);
+              hijo2[0] = funcionFitness(hijo2);
              //ANTES de imprimir y agregar los HIJOS, revisar que NO estén
              //en la matriz de hijos y tampoco en la matriz de padres
                            //IMPRIMIR HIJOS Y PADRES
@@ -303,7 +259,7 @@ public class AlgoritmoGenetico {
              //La matriz de hijos NO tiene fila de presentaciones. Inicia en 0 
              hijosOneP[conteoHijos-2] = hijo1;
              if(revisarExiste(hijo2,poblacionOneP) || revisarExiste(hijo2,hijosOneP)){
-                 System.out.println("Se aplicará mutación porque el hijo 2 YA EXISTE");
+                System.out.println("Se aplicará mutación porque el hijo 2 YA EXISTE");
                 //Debe mutarse porque ya existe. HASTA que ya no esté en la población
                 mutacion(hijo2,1);
              }
@@ -398,8 +354,8 @@ public class AlgoritmoGenetico {
               //
               //agregar los hijos generados a la MATRIZ DE HIJOS;
               //Se asigna el fitness de los individuos
-              hijo1[0] = funcionFitness(presentaciones, hijo1);
-              hijo2[0] = funcionFitness(presentaciones, hijo2);
+              hijo1[0] = funcionFitness(hijo1);
+              hijo2[0] = funcionFitness(hijo2);
              //ANTES de imprimir y agregar los HIJOS, revisar que NO estén
              //en la matriz de hijos y tampoco en la matriz de padres
               System.out.println("TENTATIVO");
@@ -474,9 +430,6 @@ public class AlgoritmoGenetico {
         imprimirMatriz(poblacionTwoP);
     }
 
-//    public void revisarRepetidos(){
-//        if (Arrays.deepEquals(individuo1, matriz2))
-//    }
     //cuando ya tengo los hijos tengo que evaluar quiénes se quedan y volver a hacer cruce. 
     public void evaluarPoblacion(int[][] arregloPadres, int[][]arregloHijos){
         int iteradorHijo = 0;
@@ -507,25 +460,6 @@ public class AlgoritmoGenetico {
            }
         }
     }
-//    public void evaluarPoblacion(int[][] arregloPadres, int[][]arregloHijos){
-//        //Ciclos o memoria, ciclos. 
-//        for(int i = 1;i<cantFilas;i++){
-//           //Se revisa que el fitness sea mayor que 0 para NO tomar en cuenta 
-//           //HIJOS BORRADOS LÓGICAMENTE porque en mutacion se les pone "-2" a los "borrados"
-//           //También revisa si el fitness del hijo es mejor que el del padre
-//           if(arregloPadres[i][0]>arregloHijos[i-1][0]){ //*****
-//           //if(arregloPadres[i][0]>arregloHijos[i-1][0]){
-//                //Se "abre espacio" i para el hijo. 
-//                //Mueve los elementos 1 abajo, hasta llegar al campo i
-//                //si el campo i es el último de la matriz, se asigna ese campo para el hijo i-1.
-//                for(int j = cantFilas-2; j>=i;j--){
-//                    arregloPadres[j+1] = arregloPadres[j];
-//                }
-//                //Se guarda al hijo en el campo que se abrió 
-//                arregloPadres[i] = arregloHijos[i-1];
-//            }
-//        }
-//    }    
     //Función que revisa si 
     public boolean revisarExiste(int[]individuoABuscar,int[][] matrizBuscar){
         int inicio;
@@ -654,16 +588,24 @@ public class AlgoritmoGenetico {
             cruceOnePoint();
             //significa que en este cruce encontró desperdicio 0
             if(bandera){ 
+                System.out.println("Asignaciones: " + asig);
+                System.out.println("Comparaciones: " + comp);
+                System.out.println("Memoria consumida: " + memoriaConsumida);
+                System.out.println("Cantidad total instrucciones: " + cantInstrucciones);
+                System.out.println("Tiempo total: ");
                 return;
             }
             else{
-              //ordenar la matriz de OnePoint
-              //ordenarArreglo();
               System.out.println("---------POBLACION TWO POINTS------------");
               imprimirMatriz(poblacionTwoP);
               System.out.println("---------GEN: " + i+ " TWO POINTS------------");
               cruceTwoPoints(); 
               if(bandera){ 
+                System.out.println("Asignaciones: " + asig);
+                System.out.println("Comparaciones: " + comp);
+                System.out.println("Memoria consumida: " + memoriaConsumida);
+                System.out.println("Cantidad total instrucciones: " + cantInstrucciones);
+                System.out.println("Tiempo total: ");
                 return;
               }
             }
@@ -703,6 +645,11 @@ public class AlgoritmoGenetico {
         System.out.println("**EL MEJOR INDIVIDUO ALGORITMO GENÉTICO ES: **");
         imprimirIndividuo(comparacion[0]);
         System.out.println("**SU DESPERDICIO ES DE: "+comparacion[0][0]+ " **");
+        System.out.println("Asignaciones: " + asig);
+        System.out.println("Comparaciones: " + comp);
+        System.out.println("Memoria consumida: " + memoriaConsumida);
+        System.out.println("Cantidad total instrucciones: " + cantInstrucciones);
+        System.out.println("Tiempo total: ");
 
         
     }

@@ -16,37 +16,23 @@ public class NewMain {
     /**
      * @param args the command line arguments
      */
-        private int[][] poblacionInicial = null;
-        private static int cantFilas = 3;
-        private static int cantPresentaciones = 2;
-        private static int presentaciones[] = {2,4,7};
+
        
-        public static void prueba(){
-            int cantF = 10;
-            for(int e: presentaciones){
-                for(int i=0;i<cantF;cantFilas++){
-                    if(cantFilas == 3){
-                        System.out.println("SALIENDO DEL PRIMER CICLO");
-                        return;
-                    }
-                }
-                if(cantFilas == 3){
-                    System.out.println("SALIENDO DEL 2DO CICLO");
-                    
-                }
-            }
-            if(cantFilas == 3){
-                System.out.println("SALIENDO DE FUNCION");
-                
-            }
-            System.out.println("SIGUE HACIENDO ESTO?");
-        }
-        
-        
     public static void main(String[] args) {
-            int kilos = 19;
-            AlgoritmoGenetico p = new AlgoritmoGenetico(presentaciones,kilos);
-            p.generaciones();
+        System.out.println("ALGORITMO GENÉTICO CON 3 PRESENTACIONES"); 
+        int kilos = 19;
+        int presentaciones[] = {2,4,7};
+        AlgoritmoGenetico g3 = new AlgoritmoGenetico(new int[]{2,3,5},8);
+        g3.generaciones();
+        System.out.println("ALGORITMO GENÉTICO CON 5 PRESENTACIONES"); 
+        AlgoritmoGenetico g5 = new AlgoritmoGenetico(new int[]{2,3,7,5,10},55);
+        g5.generaciones();     
+        System.out.println("ALGORITMO GENÉTICO CON 6 PRESENTACIONES"); 
+        AlgoritmoGenetico g6 = new AlgoritmoGenetico(new int[]{7,9,10,11,13,15},25);
+        g6.generaciones(); 
+        System.out.println("ALGORITMO GENÉTICO CON 9 PRESENTACIONES"); 
+        AlgoritmoGenetico g9 = new AlgoritmoGenetico(new int[]{30,41,11,13,15,17,19,23,29},30);
+        g9.generaciones(); 
     }
     
 }
